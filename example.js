@@ -1,39 +1,13 @@
 const fs = require('fs');
-const PresentationService = require('./services/presentationService');
+const PresentationService = require('./presentationService');
+const getMediaItemsFromFolder = require('./prepareMediaInput');
 
-async function generatePresentation() {
-  try {
-    // Sample input data
-    const selectedBrandInfo = {
-      slide6: {
-        headingFontSize: 24,
-        headingFontColor: '000000'
-      }
-    };
-
-    const briefRequestBody = {
-      BRAND_NAME: 'Sample Brand'
-    };
-
-    const labels = {
-      INSPIRATION: 'Inspiration & References'
-    };
-
-    // Generate presentation
-    const pptBuffer = await PresentationService.generateSlides(
-      selectedBrandInfo,
-      briefRequestBody,
-      {},
-      labels
-    );
-
-    // Save the presentation
-    fs.writeFileSync('output.pptx', pptBuffer);
-    console.log('Presentation generated successfully!');
-  } catch (error) {
-    console.error('Error:', error);
-  }
+async function runExample() {
+  // Get media items from the ./media folder
+  const mediaItems = getMediaItemsFromFolder('./media');
+  const pptBuffer = await PresentationService.generateSlides(mediaItems);
+  fs.writeFileSync('output.pptx', pptBuffer);
+  console.log('Presentation generated as output.pptx');
 }
 
-// Run the example
-generatePresentation(); 
+runExample(); 
